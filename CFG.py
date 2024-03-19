@@ -2,7 +2,9 @@
 from jsoncomment import JsonComment
 import sys
 print(sys.version)
-from typing import Self
+from typing import Self, TypeVar
+
+TCFG = TypeVar("TCFG", bound="CFG")
 
 class CFG:
     class Node:
@@ -11,24 +13,37 @@ class CFG:
         Right  : Self
         Parent : Self
 
+        Index  : int
+        """
+        DFST (deep first spanning tree) index.
+        """
+        NonValidIndex = -1
+
+        Visited : bool
+
         def __init__(self,
-                     name   : str,
-                     left   : Self = None,
-                     right  : Self = None):
-            self.Name   = name
-            self.Parent = None
+                     name  : str,
+                     left  : Self = None,
+                     right : Self = None):
+            self.Name    = name
+            self.Parent  = None
+            self.Visited = False
             self.AddLeftChild(left)
             self.AddRightChild(right)
+            self.SetIndex(CFG.Node.NonValidIndex)
 
         def AddLeftChild(self, left : Self):
             self.Left = left
-            if (not self.Left is None):
+            if (self.Left is not None):
                 self.Left.Parent  = self
 
         def AddRightChild(self, right : Self):
             self.Right = right
-            if (not self.Right is None):
+            if (self.Right is not None):
                 self.Right.Parent  = self
+
+        def SetIndex(self, index : int):
+            self.Index = index
 
         def ConstructByName(name      : str,
                             leftName  : str,
@@ -57,15 +72,15 @@ class CFG:
             if (self.Name == nodeName):
                 return self
             result = None
-            if (not self.Left is None):
+            if (self.Left is not None):
                 result = self.Left.FindNodeByName(nodeName)
-            if (result is None and (not self.Right is None)):
+            if (result is None and (self.Right is not None)):
                 result = self.Right.FindNodeByName(nodeName)
             return result
         
         def Print(self, level : int):
             spaces = "    " * level
-            print(f"{spaces}\"{self.Name}\":")
+            print(f"{spaces}\"{self.Name}\" [{self.Index}]:")
             if (self.Left is None):
                 print(f"{spaces}Left  is None.")
             else:
@@ -78,7 +93,9 @@ class CFG:
                 print(f"{spaces}Right:")
                 self.Right.Print(level + 1)
         
-    RootNode : Node
+    RootNode   : Node
+    NodesArray : list[Node]
+    NodesCount : int
     
     def __init__(self):
         self.RootNode = None
@@ -92,17 +109,19 @@ class CFG:
             dictNode = data["Nodes"][0]
             self.RootNode = CFG.Node.ConstructByName(dictNode["Name"], dictNode["Left"], dictNode["Right"], freeNodes)
 
+        self.NodesCount = len(data["Nodes"]) - 2 # -2, because json contains entry and exit nodes.
+
         for st in range(1, len(data["Nodes"])):
             dictNode = data["Nodes"][st]
 
             cfgNode = CFG.Node.ConstructByName(dictNode["Name"], dictNode["Left"], dictNode["Right"], freeNodes)
 
             treeNode = self.RootNode.FindNodeByName(cfgNode.Name)
-            if (not treeNode is None):
+            if (treeNode is not None):
                 parent = treeNode.Parent
-                if (not parent.Left is None and parent.Left.Name == cfgNode.Name):
+                if (parent.Left is not None and parent.Left.Name == cfgNode.Name):
                     parent.AddLeftChild(cfgNode)
-                elif (not parent.Right is None and parent.Right.Name == cfgNode.Name):
+                elif (parent.Right is not None and parent.Right.Name == cfgNode.Name):
                     parent.AddRightChild(cfgNode)
                 else:
                     raise Exception("CFG topology bug")
