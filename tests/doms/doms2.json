@@ -1,0 +1,62 @@
+{
+    "Nodes" :
+    [
+        //                  Entry
+        //                  /
+        //                 B1
+        //       |-----\  /  \  /-------|
+        //       |      B3    B4        |
+        //       |     /  \  /  \       |
+        //       |    B8  B2      B6    |
+        //       ----/ \ / \      / \---|
+        //              |  B7     |
+        //              |         Exit
+        //              |           ^
+        //              |-----------|
+        {
+            "Name"  : "Entry",
+            "Left"  : "B1",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B1",
+            "Left"  : "B3",
+            "Right" : "B4"
+        },
+        {
+            "Name"  : "B2",
+            "Left"  : "Exit",
+            "Right" : "B7"
+        },
+        {
+            "Name"  : "B7",
+            "Left"  : "",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B8",
+            "Left"  : "B3",
+            "Right" : "Exit"
+        },
+        {
+            "Name"  : "B3",
+            "Left"  : "B8",
+            "Right" : "B2"
+        },
+        {
+            "Name"  : "B4",
+            "Left"  : "B2",
+            "Right" : "B6"
+        },
+        {
+            "Name"  : "B6",
+            "Left"  : "B4",
+            "Right" : "Exit"
+        },
+        {
+            "Name"  : "Exit",
+            "Left"  : "",
+            "Right" : ""
+        }
+    ]
+}
