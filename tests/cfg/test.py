@@ -8,16 +8,17 @@ sys.path.append(codeDirPath)
 from jsoncomment import JsonComment
 
 from CFG import CFG
+import ui
 
 files = ["cfg1.json", "cfg2.json"]
 
 def RunTest(file):
-    print(f"####################   {file}   ####################")
+    ui.ColoredPrint(f"#c********************   #y{file}#c   ********************#rs")
     cfg = CFG()
     filePath = os.path.join(thisDirPath, file)
     cfg.ConstructFromFile(filePath)
     cfg.BuildDFST()
-    print("Tree:")
+    ui.ColoredPrint("#yTree:#rs")
     cfg.Print()
     print("")
 
@@ -25,22 +26,22 @@ def RunTest(file):
 
     ref = JsonComment().loadf(filePath)
     if ("Reference" not in ref):
-        print("There are no reference data for this test.")
+        ui.ColoredPrint("#yThere are no reference data for this test.#rs")
         return
 
     for refNode in ref["Reference"]:
         cfgNode = cfg.FindNode(refNode["Name"])
         if (cfgNode.Index != refNode["Index"]):
-            print("Node \"{}\" has index \"{}\", but the correct value is \"{}\".".format(cfgNode.Name, cfgNode.Index, refNode["Index"]))
+            ui.ColoredPrint("#rNode #c\"{}\"#rs has index #y\"{}\"#r, but the correct value is #y\"{}\"#rs.".format(cfgNode.Name, cfgNode.Index, refNode["Index"]))
             passed = False
 
     if (passed):
-        print("Test passed!")
+        ui.ColoredPrint("#gTest passed!#rs")
     else:
-        print("Test FAILED.")
+        ui.ColoredPrint("#rTest FAILED.#rs")
 
 
-    print(f"\n##############################################" + "#" * len(file) + "\n")
+    ui.ColoredPrint(f"\n#c**********************************************" + "*" * len(file) + "#rs\n")
 
 for file in files:
     RunTest(file)

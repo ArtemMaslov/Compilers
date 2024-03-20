@@ -3,6 +3,8 @@ from jsoncomment import JsonComment
 import sys
 from typing import Self, TypeVar
 
+import ui
+
 ###################################################################################################################
 ###################################################################################################################
 
@@ -66,33 +68,35 @@ class CFG:
         
         def PrettyName(self, tabLevel : int):
             spaces = "    " * tabLevel
-            if (self.Name == "Exit" or self.Name == "Entry"):
-                return f"{spaces}\"{self.Name}\""
+            if (self.Name == "Entry"):
+                return f"{spaces}\"#g{self.Name}#rs\""
+            elif (self.Name == "Exit"):
+                return f"{spaces}\"#r{self.Name}#rs\""
             else:
-                return f"{spaces}\"{self.Name}\" [{self.Index}]"
+                return f"{spaces}\"#c{self.Name}#rs\" #g[{self.Index}]#rs"
         
         def Print(self, tabLevel : int):
             self.Visited = True
             spaces = "    " * tabLevel
-            print(f"{self.PrettyName(tabLevel)}:")
+            ui.ColoredPrint(f"{self.PrettyName(tabLevel)}:")
             if (self.Left is None):
-                print(f"{spaces}Left  is None.")
+                ui.ColoredPrint(f"#y#p{spaces}Left#rs#p  is None#rs.")
             else:
-                print(f"{spaces}Left:")
+                ui.ColoredPrint(f"#y#p{spaces}Left#rs:")
 
                 if (not self.Left.Visited):
                     self.Left.Print(tabLevel + 1)
                 else:
-                    print(f"{self.Left.PrettyName(tabLevel + 1)} already printed.")
+                    ui.ColoredPrint(f"{self.Left.PrettyName(tabLevel + 1)} #palready printed.#rs")
 
             if (self.Right is None):
-                print(f"{spaces}Right is None.")
+                ui.ColoredPrint(f"#y#p{spaces}Right#rs#p is None.#rs")
             else:
-                print(f"{spaces}Right:")
+                ui.ColoredPrint(f"#y#p{spaces}Right#rs:")
                 if (not self.Right.Visited):
                     self.Right.Print(tabLevel + 1)
                 else:
-                    print(f"{self.Right.PrettyName(tabLevel + 1)} already printed.")
+                    ui.ColoredPrint(f"{self.Right.PrettyName(tabLevel + 1)} #palready printed.#rs")
 
 ###################################################################################################################
 ###################################################################################################################
@@ -189,7 +193,7 @@ class CFG:
     def Print(self, tabLevel : int = 0):
         self.CheckNodesNotVisited()
         if (self.RootNode is None):
-            print("CFG is None")
+            ui.ColoredPrint("#rCFG is None.#rs")
         else:
             self.RootNode.Print(tabLevel)
 
