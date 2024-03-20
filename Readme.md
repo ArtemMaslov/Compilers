@@ -13,7 +13,6 @@ Compilers is a project to test basic compiler optimization's algorithms.
 
 ### Project structure
 
-1. `CFG` (Control flow graph).
-1. `DFST` (Deep first spanning tree).
-1. `DomTree` (dominators tree).
+1. `CFG`. Control flow graph class.
+1. `DomTree`. Dominators tree.
 1. `test`. Folder with different tests.

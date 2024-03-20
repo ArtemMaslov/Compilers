@@ -60,5 +60,49 @@
             "Left"  : "",
             "Right" : ""
         }
+    ],
+    
+    "Reference" :
+    [
+        {
+            "Name"  : "Entry",
+            "Index" : -1
+        },
+        {
+            "Name"  : "B1",
+            "Index" : 1            
+        },
+        {
+            "Name"  : "B3",
+            "Index" : 4
+        },
+        {
+            "Name"  : "B4",
+            "Index" : 2
+        },
+        {
+            "Name"  : "B8",
+            "Index" : 8
+        },
+        {
+            "Name"  : "B2",
+            "Index" : 5
+        },
+        {
+            "Name"  : "B6",
+            "Index" : 3
+        },
+        {
+            "Name"  : "B5",
+            "Index" : 7
+        },
+        {
+            "Name"  : "B7",
+            "Index" : 6
+        },
+        {
+            "Name"  : "Exit",
+            "Index" : -1
+        }
     ]
 }

@@ -2,23 +2,45 @@ import sys
 import os
 
 thisDirPath = os.path.dirname(os.path.abspath(__file__))
-prevDirPath = os.path.dirname(thisDirPath)
-prevPrevDirPath = os.path.dirname(prevDirPath)
-sys.path.append(prevPrevDirPath)
+codeDirPath = os.path.abspath(thisDirPath + "/../..")
+sys.path.append(codeDirPath)
+
+from jsoncomment import JsonComment
 
 from CFG import CFG
-import DFST
 
-print("##########   cfg1.json   ##########")
-cfg = CFG()
-cfg.ConstructFromFile(os.path.join(thisDirPath, "cfg1.json"))
-DFST.ConstructDFST(cfg)
-cfg.Print()
+files = ["cfg1.json", "cfg2.json"]
 
-print("\n\n")
+def RunTest(file):
+    print(f"####################   {file}   ####################")
+    cfg = CFG()
+    filePath = os.path.join(thisDirPath, file)
+    cfg.ConstructFromFile(filePath)
+    cfg.BuildDFST()
+    print("Tree:")
+    cfg.Print()
+    print("")
 
-print("##########   cfg2.json   ##########")
-cfg = CFG()
-cfg.ConstructFromFile(os.path.join(thisDirPath, "cfg2.json"))
-DFST.ConstructDFST(cfg)
-cfg.Print()
+    passed = True
+
+    ref = JsonComment().loadf(filePath)
+    if ("Reference" not in ref):
+        print("There are no reference data for this test.")
+        return
+
+    for refNode in ref["Reference"]:
+        cfgNode = cfg.FindNode(refNode["Name"])
+        if (cfgNode.Index != refNode["Index"]):
+            print("Node \"{}\" has index \"{}\", but the correct value is \"{}\".".format(cfgNode.Name, cfgNode.Index, refNode["Index"]))
+            passed = False
+
+    if (passed):
+        print("Test passed!")
+    else:
+        print("Test FAILED.")
+
+
+    print(f"\n##############################################" + "#" * len(file) + "\n")
+
+for file in files:
+    RunTest(file)
