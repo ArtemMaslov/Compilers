@@ -1,7 +1,6 @@
 # json parser with C-style comments.
 from jsoncomment import JsonComment
 import sys
-print(sys.version)
 from typing import Self, TypeVar
 
 TCFG = TypeVar("TCFG", bound="CFG")
