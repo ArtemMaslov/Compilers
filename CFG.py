@@ -3,6 +3,9 @@ from jsoncomment import JsonComment
 import sys
 from typing import Self, TypeVar
 
+###################################################################################################################
+###################################################################################################################
+
 TCFG = TypeVar("TCFG", bound="CFG")
 
 class CFG:
@@ -44,29 +47,6 @@ class CFG:
         def SetIndex(self, index : int):
             self.Index = index
 
-        def ConstructByName(name      : str,
-                            leftName  : str,
-                            rightName : str,
-                            freeNodes : list[Self]) -> Self:
-            leftNode  = None
-            rightNode = None
-            for st in range(len(freeNodes) - 1, -1, -1):
-                node = freeNodes[st]
-                if (node.Name == leftName):
-                    leftNode = node
-                    freeNodes.pop(st)
-                elif (node.Name == rightName):
-                    rightNode = node
-                    freeNodes.pop(st)
-
-            if (leftNode is None and leftName != ""):
-                leftNode = CFG.Node(leftName)
-            if (rightNode is None and rightName != ""):
-                rightNode = CFG.Node(rightName)
-
-            thisNode = CFG.Node(name, leftNode, rightNode)
-            return thisNode
-
         def FindNodeByName(self, nodeName : str) -> Self:
             if (self.Name == nodeName):
                 return self
@@ -77,24 +57,41 @@ class CFG:
                 result = self.Right.FindNodeByName(nodeName)
             return result
         
-        def Print(self, level : int):
+        def PrettyName(self, level : int):
             spaces = "    " * level
-            print(f"{spaces}\"{self.Name}\" [{self.Index}]:")
+            if (self.Name == "Exit" or self.Name == "Entry"):
+                return f"{spaces}\"{self.Name}\""
+            else:
+                return f"{spaces}\"{self.Name}\" [{self.Index}]"
+        
+        def Print(self, level : int):
+            self.Visited = True
+            spaces = "    " * level
+            print(f"{self.PrettyName(level)}:")
             if (self.Left is None):
                 print(f"{spaces}Left  is None.")
             else:
                 print(f"{spaces}Left:")
-                self.Left.Print(level + 1)
+
+                if (not self.Left.Visited):
+                    self.Left.Print(level + 1)
+                else:
+                    print(f"{self.Left.PrettyName(level + 1)} already printed.")
 
             if (self.Right is None):
                 print(f"{spaces}Right is None.")
             else:
                 print(f"{spaces}Right:")
-                self.Right.Print(level + 1)
+                if (not self.Right.Visited):
+                    self.Right.Print(level + 1)
+                else:
+                    print(f"{self.Right.PrettyName(level + 1)} already printed.")
+
+###################################################################################################################
+###################################################################################################################
         
     RootNode   : Node
     NodesArray : list[Node]
-    NodesCount : int
     
     def __init__(self):
         self.RootNode = None
@@ -102,33 +99,48 @@ class CFG:
     def ConstructFromFile(self, filePath : str):
         data = JsonComment().loadf(filePath)
 
-        freeNodes = []
+        cfgNodes : list[CFG.Node] = []
 
-        if (len(data["Nodes"]) > 0):
-            dictNode = data["Nodes"][0]
-            self.RootNode = CFG.Node.ConstructByName(dictNode["Name"], dictNode["Left"], dictNode["Right"], freeNodes)
+        def FindNodeInList(nodeName : str, nodesList : list[CFG.Node]):
+            for node in nodesList:
+                if (node.Name == nodeName):
+                    return node
+            return None
 
-        self.NodesCount = len(data["Nodes"]) - 2 # -2, because json contains entry and exit nodes.
+        for dictNode in data["Nodes"]:
+            cfgNode = CFG.Node(dictNode["Name"], None, None)
+            cfgNodes.append(cfgNode)
 
-        for st in range(1, len(data["Nodes"])):
+        for st in range(0, len(data["Nodes"])):
             dictNode = data["Nodes"][st]
+            cfgNode  = cfgNodes[st]
 
-            cfgNode = CFG.Node.ConstructByName(dictNode["Name"], dictNode["Left"], dictNode["Right"], freeNodes)
+            if (dictNode["Left"] != ""):
+                leftNode = FindNodeInList(dictNode["Left"], cfgNodes)
+                if (leftNode == None):
+                    raise Exception("Node \"{}\" not found".format(dictNode["Left"]))
+                cfgNode.AddLeftChild(leftNode)                
 
-            treeNode = self.RootNode.FindNodeByName(cfgNode.Name)
-            if (treeNode is not None):
-                parent = treeNode.Parent
-                if (parent.Left is not None and parent.Left.Name == cfgNode.Name):
-                    parent.AddLeftChild(cfgNode)
-                elif (parent.Right is not None and parent.Right.Name == cfgNode.Name):
-                    parent.AddRightChild(cfgNode)
-                else:
-                    raise Exception("CFG topology bug")
-            else:
-                freeNodes.append(cfgNode)
+            if (dictNode["Right"] != ""):
+                rightNode = FindNodeInList(dictNode["Right"], cfgNodes)
+                if (rightNode == None):
+                    raise Exception("Node \"{}\" not found".format(dictNode["Right"]))
+                cfgNode.AddRightChild(rightNode)
+
+        entryNode = FindNodeInList("Entry", cfgNodes)
+        self.RootNode   = entryNode
+        self.NodesArray = cfgNodes
+
+    def CheckNodesNotVisited(self):
+        for node in self.NodesArray:
+            node.Visited = False
 
     def Print(self):
+        self.CheckNodesNotVisited()
         if (self.RootNode is None):
             print("CFG is None")
         else:
             self.RootNode.Print(0)
+
+###################################################################################################################
+###################################################################################################################

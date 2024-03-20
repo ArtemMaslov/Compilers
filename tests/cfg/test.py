@@ -9,16 +9,16 @@ sys.path.append(prevPrevDirPath)
 from CFG import CFG
 import DFST
 
-print("##########   doms1.json   ##########")
+print("##########   cfg1.json   ##########")
 cfg = CFG()
-cfg.ConstructFromFile(os.path.join(thisDirPath, "doms1.json"))
+cfg.ConstructFromFile(os.path.join(thisDirPath, "cfg1.json"))
 DFST.ConstructDFST(cfg)
 cfg.Print()
 
 print("\n\n")
 
-print("##########   doms2.json   ##########")
+print("##########   cfg2.json   ##########")
 cfg = CFG()
-cfg.ConstructFromFile(os.path.join(thisDirPath, "doms2.json"))
+cfg.ConstructFromFile(os.path.join(thisDirPath, "cfg2.json"))
 DFST.ConstructDFST(cfg)
 cfg.Print()
