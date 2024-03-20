@@ -66,7 +66,6 @@ class DominanceFrontier:
 
 					r = self.idom[r]
 
-
 		info += f'3) df = {df}'
 
 		return df, info

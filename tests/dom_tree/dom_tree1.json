@@ -1,0 +1,104 @@
+{
+    "Nodes" :
+    [
+        //                  Entry
+        //                   /
+        //                  B1 [1]
+        //              f /   \---\ t
+        //              B3 [4]     B4 [2]
+        //             /   \         \------\
+        //          B8 [8]  B2 [5]           B6 [3]
+        //                /   \--\           /
+        //              B5 [7]    B7 [6]    Exit
+        {
+            "Name"  : "Entry",
+            "Left"  : "B1",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B1",
+            "Left"  : "B3",
+            "Right" : "B4"
+        },
+        {
+            "Name"  : "B2",
+            "Left"  : "B5",
+            "Right" : "B7"
+        },
+        {
+            "Name"  : "B7",
+            "Left"  : "",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B8",
+            "Left"  : "",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B3",
+            "Left"  : "B8",
+            "Right" : "B2"
+        },
+        {
+            "Name"  : "B4",
+            "Left"  : "",
+            "Right" : "B6"
+        },
+        {
+            "Name"  : "B5",
+            "Left"  : "",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B6",
+            "Left"  : "",
+            "Right" : "Exit"
+        },
+        {
+            "Name"  : "Exit",
+            "Left"  : "",
+            "Right" : ""
+        }
+    ],
+
+    "Reference" :
+    [
+        {
+            "Name" : "Entry",
+            "Dominates" : ["Entry", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "Exit"]
+        },
+        {
+            "Name" : "B1",
+            "Dominates" : ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "Exit"]
+        },
+        {
+            "Name" : "B2",
+            "Dominates" : ["B5", "B7", "B2"]
+        },
+        {
+            "Name" : "B3",
+            "Dominates" : ["B2", "B3", "B8", "B5", "B7"]
+        },
+        {
+            "Name" : "B4",
+            "Dominates" : ["B4", "B6", "Exit"]
+        },
+        {
+            "Name" : "B5",
+            "Dominates" : ["B5"]
+        },
+        {
+            "Name" : "B6",
+            "Dominates" : ["B6", "Exit"]
+        },
+        {
+            "Name" : "B7",
+            "Dominates" : ["B7"]
+        },
+        {
+            "Name" : "B8",
+            "Dominates" : ["B8"]
+        }
+    ]
+}

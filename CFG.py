@@ -12,10 +12,10 @@ TCFG = TypeVar("TCFG", bound="CFG")
 
 class CFG:
     class Node:
-        Name   : str
-        Left   : Self
-        Right  : Self
-        Parent : Self
+        Name    : str
+        Left    : Self
+        Right   : Self
+        Parents : list[Self]
 
         Index  : int
         """
@@ -37,7 +37,7 @@ class CFG:
                      left  : Self = None,
                      right : Self = None):
             self.Name    = name
-            self.Parent  = None
+            self.Parents = []
             self.Visited = False
             self.AddLeftChild(left)
             self.AddRightChild(right)
@@ -46,12 +46,12 @@ class CFG:
         def AddLeftChild(self, left : Self):
             self.Left = left
             if (self.Left is not None):
-                self.Left.Parent  = self
+                self.Left.Parents.append(self)
 
         def AddRightChild(self, right : Self):
             self.Right = right
             if (self.Right is not None):
-                self.Right.Parent  = self
+                self.Right.Parents.append(self)
 
         def SetIndex(self, index : int):
             self.Index = index

@@ -59,44 +59,40 @@
             "Right" : ""
         }
     ],
-    
+
     "Reference" :
     [
         {
-            "Name"  : "Entry",
-            "Index" : -1
+            "Name" : "Entry",
+            "Dominates" : ["Entry", "B1", "B2", "B3", "B4", "B6", "B7", "B8", "Exit"]
         },
         {
-            "Name"  : "B1",
-            "Index" : 1            
+            "Name" : "B1",
+            "Dominates" : ["B1", "B2", "B3", "B4", "B6", "B7", "Exit"]
         },
         {
-            "Name"  : "B3",
-            "Index" : 4
+            "Name" : "B2",
+            "Dominates" : ["B2", "B7"]
         },
         {
-            "Name"  : "B4",
-            "Index" : 2
+            "Name" : "B3",
+            "Dominates" : ["B3", "B8"]
         },
         {
-            "Name"  : "B8",
-            "Index" : 7
+            "Name" : "B4",
+            "Dominates" : ["B4", "B6"]
         },
         {
-            "Name"  : "B2",
-            "Index" : 5
+            "Name" : "B6",
+            "Dominates" : ["B6"]
         },
         {
-            "Name"  : "B7",
-            "Index" : 6
+            "Name" : "B7",
+            "Dominates" : ["B7"]
         },
         {
-            "Name"  : "B6",
-            "Index" : 3
-        },
-        {
-            "Name"  : "Exit",
-            "Index" : -1
+            "Name" : "B8",
+            "Dominates" : ["B8"]
         }
     ]
 }

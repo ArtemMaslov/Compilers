@@ -1,0 +1,25 @@
+{
+    "Nodes" : 
+    [
+        {
+            "Name"  : "Entry",
+            "Left"  : "B1",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B1",
+            "Left"  : "B3",
+            "Right" : "B2"
+        },
+        {
+            "Name"  : "B3",
+            "Left"  : "B4",
+            "Right" : ""
+        },
+        {
+            "Name"  : "B4",
+            "Left"  : "",
+            "Right" : ""
+        }
+    ]
+}
