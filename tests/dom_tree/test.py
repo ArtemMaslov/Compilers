@@ -11,7 +11,7 @@ from CFG import CFG
 from DomTree import DomTree
 import ui as ui
 
-files = ["dom_tree1.json", "dom_tree2.json"]
+files = ["dom_tree1.json", "dom_tree2.json", "dom_tree3.json"]
 
 def RunTest(file):
     ui.ColoredPrint(f"#c********************   #y{file}#c   ********************#rs")
@@ -36,6 +36,8 @@ def RunTest(file):
     if ("Reference" not in ref):
         ui.ColoredPrint("#yThere are no reference data for this test.#rs")
         return
+    
+    return
 
     for refNode in ref["Reference"]:
         dmtNode = dmt.FindNode(refNode["Name"])

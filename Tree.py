@@ -30,40 +30,8 @@ class Tree:
                 for child in childs:
                     self.AddChildToEnd(child)
 
-        def InsertChildByIndex(self, 
-                            child : Self, 
-                            index : int):
-            """
-            Add child to node by index.
-
-            Child is placed before element with index.
-
-            Examples (let nodes be integer numbers for simplicity):
-                Childs = []
-                Result of node.AddChildByIndex(1, index = 0) is:
-                    Childs == [1]
-
-                Childs = [1, 2]
-                Result of node.AddChildByIndex(3, index = 1) is:
-                    Childs == [1, 3, 2]
-
-                Childs = [1, 2]
-                Result of node.AddChildByIndex(3, index = 2) is:
-                    Childs == [1, 2, 3]
-
-                Childs = [1, 2]
-                Result of node.AddChildByIndex(3, index = 4) is:
-                    Childs == [1, 2, None, None, 3]
-            """
-            if (index < 0):
-                raise Exception(f"Index cannot be negative. index = {index}. If you want to add child at the top of the list use index = 0.")
-            
-            if (index <= self.GetChildrenCount()):
-                self.Childs.insert(index, child)
-            else:
-                for st in range(self.GetChildrenCount(), index):
-                    self.Childs.append(None)
-                self.Childs.append(child)
+        def _update_child_(self, child : Self):
+            child.Parents.append(self)
 
         def SetChildByIndex(self, 
                             child : Self, 
@@ -91,16 +59,20 @@ class Tree:
             
             if (index < self.GetChildrenCount()):
                 self.Childs[st] = child
+                self._update_child_(child)
             else:
                 for st in range(self.GetChildrenCount(), index):
                     self.Childs.append(None)
                 self.Childs.append(child)
+                self._update_child_(child)
 
         def AddChildToTop(self, child : Self):
             self.Childs.insert(0, child)
+            self._update_child_(child)
             
         def AddChildToEnd(self, child : Self):
             self.Childs.append(child)
+            self._update_child_(child)
 
         def GetChildrenCount(self):
             return len(self.Childs)
@@ -178,6 +150,15 @@ class Tree:
             ui.ColoredPrint("#rCFG is None.#rs")
         else:
             self.RootNode.Print(tabLevel)
+
+    def NodesNamesToStr(nodes):
+        if (len(nodes) == 0):
+            return "{}"
+        res = "{"
+        for node in nodes:
+            res += node.PrettyName() + ", "
+        res = res[:-2] + "}"
+        return res
 
 ###################################################################################################################
 ###################################################################################################################
