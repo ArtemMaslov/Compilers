@@ -14,9 +14,8 @@
         //              |               ^
         //              |---------------|
         {
-            "Name"  : "Entry",
-            "Left"  : "B1",
-            "Right" : ""
+            "Name"   : "Entry",
+            "Child0" : "B1",
         },
         {
             "Name"  : "B1",
@@ -54,9 +53,7 @@
             "Right" : "B4"
         },
         {
-            "Name"  : "Exit",
-            "Left"  : "",
-            "Right" : ""
+            "Name"  : "Exit"
         }
     ],
     
@@ -68,7 +65,7 @@
         },
         {
             "Name"  : "B1",
-            "Index" : 1            
+            "Index" : 1
         },
         {
             "Name"  : "B3",

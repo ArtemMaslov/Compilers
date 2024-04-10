@@ -8,9 +8,9 @@ sys.path.append(codeDirPath)
 from jsoncomment import JsonComment
 
 from CFG import CFG
-import ui
+import ui as ui
 
-files = ["cfg1.json", "cfg2.json"]
+files = ["cfg1.json", "cfg2.json", "cfg3.json"]
 
 def RunTest(file):
     ui.ColoredPrint(f"#c********************   #y{file}#c   ********************#rs")

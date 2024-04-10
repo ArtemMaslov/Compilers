@@ -1,75 +1,62 @@
 from typing import Self, TypeVar
 
+from Tree import Tree
 from CFG import CFG
 
-import ui
+import ui as ui
 
 ###################################################################################################################
 ###################################################################################################################
 
-class DomTree:
-    class Node:
-        Name   : str
-        Childs : list[Self]
-        Parent : Self
-
-        Visited : bool
-        """
-        Flag for tree traversal algorithms. Indicates that node was already visited.
-        """
-
+class DomTree(Tree):
+    class Node(Tree.Node):
         def __init__(self,
                      name   : str,
-                     childs : list[Self]):
-            self.Name    = name
-            self.Childs  = []
-            self.Parent  = None
-            if (childs is not None):
-                for child in childs:
-                    self.AddChild(child)
+                     childs : list[Self] = None):
+            Tree.Node.__init__(self, name, childs)
 
-        def AddChild(self, child : Self):
-            if (child is not None):
-                self.Childs.append(child)
-                child.Parent = self
+        def PrintValue(self, tabLevel : int):
+            pass
 
-        def PrettyName(self, tabLevel : int):
-            spaces = "    " * tabLevel
+        def PrettyName(self):
             if (self.Name == "Entry"):
-                return f"{spaces}\"#g{self.Name}#rs\""
+                return f"\"#g{self.Name}#rs\""
             elif (self.Name == "Exit"):
-                return f"{spaces}\"#r{self.Name}#rs\""
+                return f"\"#r{self.Name}#rs\""
             else:
-                return f"{spaces}\"#c{self.Name}#rs\"#rs"
-        
-        def Print(self, tabLevel : int):
-            self.Visited = True
-            spaces = "    " * tabLevel
-            ui.ColoredPrint(f"{self.PrettyName(tabLevel)}:")
-            ui.ColoredPrint(f"#y#p{spaces}Childs#rs:")
+                return f"\"#c{self.Name}#rs\"#rs"
             
-            for childNode in self.Childs:
-                if (not childNode.Visited):
-                    childNode.Print(tabLevel + 1)
-                else:
-                    ui.ColoredPrint(f"{childNode.PrettyName(tabLevel + 1)} #palready printed.#rs")
-
+        def GetDominatingNodes(self):
+            res = {self}
+            for child in self.Childs:
+                if (child is not None):
+                    res.add(child.GetDominatingNodes())
+            return res
+            
 ###################################################################################################################
 ###################################################################################################################
-
-    RootNode   : Node
-    NodesArray : list[Node]
-
-    def __init__(self):
-        self.RootNode   = None
-        self.NodesArray = []
 
     def BuildFromCFG(self, cfg : CFG):
+        print_flag = True
+
+        spaces = ui.GetSpacePadding(1)
+
+        ui.DebugPrint("#yBuilding dominator tree...#rs\n", print_flag)
+
+        ui.DebugPrint("#yFirst approximation:#rs\n", print_flag)
+
         # First approximation.
+        # In and Out is temporary nodes variables.
         for node in cfg.NodesArray:
             node.In  = set()
             node.Out = set(cfg.NodesArray)
 
+            ui.DebugPrint(f"{spaces}{node.PrettyName()}:\n", print_flag)
+            ui.DebugPrint(f"{spaces}In  = {node.In}\n", print_flag)
+            ui.DebugPrint(f"{spaces}Out = {node.Out}\n", print_flag)
+
+        ui.DebugPrint("#yBoundary condition:#rs\n", print_flag)
+        
         # Boundary condition.
         entryNode = cfg.FindNode("Entry")
         entryNode.Out = set([entryNode])
@@ -97,38 +84,21 @@ class DomTree:
 
         # Building dominators tree.
         for node in cfg.NodesArray:
-            domTreeNode = DomTree.Node(node.Name, None)
+            domTreeNode = DomTree.Node(node.Name)
             self.NodesArray.append(domTreeNode)
 
         for st in range(0, len(cfg.NodesArray)):
             node = cfg.NodesArray[st]
             domTreeNode = self.NodesArray[st]
             for childNode in node.Out:
-                domTreeNode.AddChild(self.FindNode(childNode.Name))
+                domTreeNode.AddChildToEnd(self.FindNode(childNode.Name))
         
         self.RootNode = self.FindNode("Entry")
 
-        # Clearing algorithm intermediate data.
+        # Clearing algorithm temporary data.
         for node in cfg.NodesArray:
             del node.In
             del node.Out
-
-    def FindNode(self, nodeName : str):
-        for node in self.NodesArray:
-            if (node.Name == nodeName):
-                return node
-        return None
-    
-    def CheckNodesNotVisited(self):
-        for node in self.NodesArray:
-            node.Visited = False
-
-    def Print(self, tabLevel : int = 0):
-        self.CheckNodesNotVisited()
-        if (self.RootNode is None):
-            ui.ColoredPrint("#DomTree is None.#rs")
-        else:
-            self.RootNode.Print(tabLevel)
 
 ###################################################################################################################
 ###################################################################################################################

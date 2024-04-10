@@ -4,6 +4,13 @@ just_fix_windows_console()
 ###################################################################################################################
 ###################################################################################################################
 
+def GetSpacePadding(tabLevel):
+    return "    " * tabLevel
+
+def DebugPrint(msg, print_flag = True):
+    if (print_flag):
+        ColoredPrint(msg)
+
 def ColoredPrint(formatStr : str):
     """
     Colored output to console. Uses ANSI standard.

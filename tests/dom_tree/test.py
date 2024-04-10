@@ -9,7 +9,7 @@ from jsoncomment import JsonComment
 
 from CFG import CFG
 from DomTree import DomTree
-import ui
+import ui as ui
 
 files = ["dom_tree1.json", "dom_tree2.json"]
 
@@ -37,12 +37,15 @@ def RunTest(file):
         ui.ColoredPrint("#yThere are no reference data for this test.#rs")
         return
 
-    return
-
     for refNode in ref["Reference"]:
-        cfgNode = cfg.FindNode(refNode["Name"])
-        if (cfgNode.Index != refNode["Index"]):
-            ui.ColoredPrint("#rNode #c\"{}\"#rs has index #y\"{}\"#r, but the correct value is #y\"{}\"#rs.".format(cfgNode.Name, cfgNode.Index, refNode["Index"]))
+        dmtNode = dmt.FindNode(refNode["Name"])
+        refNodeChilds = set(refNode["Dominates"])
+        dmtNodeChilds = [node.Name for node in dmtNode.GetDominatingNodes()]
+        if (refNodeChilds != dmtNodeChilds):
+            ui.ColoredPrint(
+                f"#rIncorrect list of dominating nodes for Node #c\"{dmtNode.Name}\"#rs.\n"
+                f"    Ref  list = {refNodeChilds}\n"
+                f"    Node list = {dmtNodeChilds}\n")
             passed = False
 
     if (passed):

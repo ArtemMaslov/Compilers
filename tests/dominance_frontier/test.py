@@ -10,7 +10,7 @@ sys.path.append(codeDirPath)
 
 
 from typing import List, Set, Dict
-import ui
+import ui as ui
 
 from dominance_frontier import DominanceFrontier
 

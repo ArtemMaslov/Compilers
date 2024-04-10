@@ -11,9 +11,8 @@
         //                /   \--\           /
         //              B5 [7]    B7 [6]    Exit
         {
-            "Name"  : "Entry",
-            "Left"  : "B1",
-            "Right" : ""
+            "Name"   : "Entry",
+            "Child0" : "B1",
         },
         {
             "Name"  : "B1",
@@ -56,9 +55,7 @@
             "Right" : "Exit"
         },
         {
-            "Name"  : "Exit",
-            "Left"  : "",
-            "Right" : ""
+            "Name"  : "Exit"
         }
     ],
     
@@ -70,7 +67,7 @@
         },
         {
             "Name"  : "B1",
-            "Index" : 1            
+            "Index" : 1
         },
         {
             "Name"  : "B3",
