@@ -1,0 +1,100 @@
+{
+    "Nodes" :
+    [
+        // Example 2 from lecture 4. Dominators and postdominators.
+        {
+            "Name"   : "Entry",
+            "Child0" : "B0"
+        },
+        {
+            "Name" : "B0",
+            "Child0" : "B1"
+        },
+        {
+            "Name" : "B1",
+            "Child0" : "B2",
+            "Child1" : "B3"
+        },
+        {
+            "Name" : "B2",
+            "Child0" : "B7"
+        },
+        {
+            "Name" : "B3",
+            "Left" : "B4",
+            "Right" : "B5"
+        },
+        {
+            "Name" : "B4",
+            "Child0" : "B6"
+        },
+        {
+            "Name" : "B5",
+            "Child0" : "B6"
+        },
+        {
+            "Name" : "B6",
+            "Child0" : "B7"
+        },
+        {
+            "Name" : "B7",
+            "Left" : "Exit",
+            "Right" : "B1"
+        },
+        {
+            "Name"  : "Exit"
+        }
+    ],
+    
+    "Reference" :
+    [
+        {
+            "Name"  : "Entry",
+            "Index" : -1
+        },
+        {
+            "Name"  : "B1",
+            "Index" : 1
+        },
+        {
+            "Name"  : "B2",
+            "Index" : 2
+        },
+        {
+            "Name"  : "B3",
+            "Index" : 3
+        },
+        {
+            "Name"  : "B4",
+            "Index" : 4
+        },
+        {
+            "Name"  : "B5",
+            "Index" : 5
+        },
+        {
+            "Name"  : "B6",
+            "Index" : 6
+        },
+        {
+            "Name"  : "B7",
+            "Index" : 7
+        },
+        {
+            "Name"  : "B8",
+            "Index" : 8
+        },
+        {
+            "Name"  : "B9",
+            "Index" : 9
+        },
+        {
+            "Name"  : "B10",
+            "Index" : 10
+        },
+        {
+            "Name"  : "Exit",
+            "Index" : -1
+        }
+    ]
+}

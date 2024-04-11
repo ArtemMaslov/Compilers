@@ -4,6 +4,8 @@ from Tree import Tree
 from CFG import CFG
 from CNodes import CNode, CNodeInfo
 
+from dominance_frontier import DominanceFrontier
+
 import ui as ui
 
 ###################################################################################################################
@@ -114,6 +116,38 @@ class DomTree(Tree):
         for node in cfg.NodesArray:
             del node.In
             del node.Out
+
+    def ComputeDominanceFrontier(self, cfg : CFG):
+        N = []
+        Pred = []
+        Doms = []
+        IDom = []
+
+        for node in self.NodesArray:
+            N.append(node.CNodeInfo.Index)
+            _pred = []
+            parents = cfg.FindNode(node.Name).Parents
+            for parent in parents:
+                _pred.append(parent.CNodeInfo.Index)
+            Pred.append(_pred)
+            _doms = []
+            for dom in node.CNodeInfo.Doms:
+                _doms.append(dom.CNodeInfo.Index)
+            Doms.append(_doms)
+            if (node.CNodeInfo.IDom == None):
+                IDom.append(-1)
+            else:
+                IDom.append(node.CNodeInfo.IDom.CNodeInfo.Index)
+
+        print("N:\n", N)
+        print("Pred:\n", Pred)
+        print("Doms:\n", Doms)
+        print("IDom:\n", IDom)
+
+        domFront = DominanceFrontier(N, Pred, Doms, IDom)
+
+        df, info = domFront.calculate()
+        print(info)
 
 ###################################################################################################################
 ###################################################################################################################
